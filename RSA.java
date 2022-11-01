@@ -41,7 +41,12 @@ public class RSA {
             }
         }
         System.out.println("The value of e = " + e);
+
         // Creating d
+        /* uses the proof we learned about in
+         * class to show that
+         * x^(ed) = x(1 + i*φ(n)) = x mod n
+         */
         for(int i = 0; i <= 9; i++) {
             // Helper variable for finding d
             x = 1 + (i * φ);
@@ -67,6 +72,10 @@ public class RSA {
         System.out.println("BigInt C: " + C);
 
         // Creating the decryption
+
+        int result = splitExponent(encryption, d, n);
+        System.out.println("Decrypted message is: " + result);
+
         decryptMessage = (C.pow(d)).mod(N);
         System.out.println("Decrypted message is: " + decryptMessage);
     }
@@ -75,5 +84,26 @@ public class RSA {
     public static int gcd(int e, int z) {
         if(e == 0) return z;
         else return gcd(z % e, e);
+    }
+
+    /* Method to perform
+     * e^(-1) mod φ(n)
+     * in a way to avoid using BigInteger
+     * Takes a number, an exponent,
+     * and an integer to modulo by
+     * Divide exponent by 2, holding the remainder
+     * 
+    */
+    public static int splitExponent(int num, int pow, int mod) {
+        int halfPow = pow / 2;
+        int rem = pow % 2;
+        int result = 1;
+        for(int i = 0; i < halfPow; i++) {
+            result = (result * ((int) ((Math.pow(num, 2)) % mod))) % mod;
+        }
+        if(rem != 0) {
+            result = (result * (num % mod)) % mod;
+        }
+        return result;
     }
 }
