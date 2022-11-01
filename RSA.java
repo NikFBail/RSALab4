@@ -18,7 +18,7 @@ public class RSA {
 
         // Number to be encrypted and decrypted
         int message = 12;
-        double c;
+        int encryption;
         BigInteger decryptMessage;
 
         // First prime number p, second prime number q
@@ -29,11 +29,11 @@ public class RSA {
         // Finding n and φ(n)
         n = p * q;
         φ = (p - 1) * (q - 1);
+        System.out.println("The value of n = " + n);
         System.out.println("The value of φ(n) = " + φ);
 
         // Choose e ∈ {2, 2, ... , φ(n)} s.t. gcd(e, φ(n)) = 1
         // e range starting at 2, otherwise will always stop at e = 1
-        // Case 1, gcd(e, φ) = 1, Use Euler Algorithm
         for(e = 2; e < φ; e++) {
             // e is for the public key exponent
             if(gcd(e, φ) == 1) {
@@ -41,7 +41,7 @@ public class RSA {
             }
         }
         System.out.println("The value of e = " + e);
-        // Case 2, gcd(e, φ) != 1
+        // Creating d
         for(int i = 0; i <= 9; i++) {
             // Helper variable for finding d
             x = 1 + (i * φ);
@@ -53,20 +53,25 @@ public class RSA {
             }
         }
         System.out.println("The value of d = " + d);
+
         // Creating the encryption
-        c = (Math.pow(message, e)) % n;
-        System.out.println("Encrypted message is: " + c);
+        encryption = (int) ((Math.pow(message, e)) % n);
+        System.out.println("Encrypted message is: " + encryption);
 
         // Converting int value of n to BigInteger
         BigInteger N = BigInteger.valueOf(n);
+        System.out.println("BigInt n: " + N);
 
         // Converting float value of c to BigInteger
-        BigInteger C = BigDecimal.valueOf(c).toBigInteger();
+        BigInteger C = BigDecimal.valueOf(encryption).toBigInteger();
+        System.out.println("BigInt C: " + C);
+
         // Creating the decryption
         decryptMessage = (C.pow(d)).mod(N);
         System.out.println("Decrypted message is: " + decryptMessage);
     }
 
+    // recursive gcd method
     public static int gcd(int e, int z) {
         if(e == 0) return z;
         else return gcd(z % e, e);
