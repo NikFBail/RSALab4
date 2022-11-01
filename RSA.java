@@ -9,7 +9,6 @@ import java.util.*;
  * 5. Compute d = e^(-1) mod φ(n)
  * The public key is (n, e) - e is the public exponent
  * The private key is (p, q, d) - d is the private exponent
- * 
  */
 public class RSA {
     public static void main(String args[]) {
@@ -32,9 +31,9 @@ public class RSA {
         φ = (p - 1) * (q - 1);
         System.out.println("The value of φ(n) = " + φ);
 
-        // Case 1, gcd(e, φ) = 1, Use Euler Algorithm
         // Choose e ∈ {2, 2, ... , φ(n)} s.t. gcd(e, φ(n)) = 1
         // e range starting at 2, otherwise will always stop at e = 1
+        // Case 1, gcd(e, φ) = 1, Use Euler Algorithm
         for(e = 2; e < φ; e++) {
             // e is for the public key exponent
             if(gcd(e, φ) == 1) {
@@ -44,6 +43,7 @@ public class RSA {
         System.out.println("The value of e = " + e);
         // Case 2, gcd(e, φ) != 1
         for(int i = 0; i <= 9; i++) {
+            // Helper variable for finding d
             x = 1 + (i * φ);
 
             // d is for the private key exponent
@@ -53,6 +53,7 @@ public class RSA {
             }
         }
         System.out.println("The value of d = " + d);
+        // Creating the encryption
         c = (Math.pow(message, e)) % n;
         System.out.println("Encrypted message is: " + c);
 
@@ -61,6 +62,7 @@ public class RSA {
 
         // Converting float value of c to BigInteger
         BigInteger C = BigDecimal.valueOf(c).toBigInteger();
+        // Creating the decryption
         decryptMessage = (C.pow(d)).mod(N);
         System.out.println("Decrypted message is: " + decryptMessage);
     }
