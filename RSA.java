@@ -19,7 +19,7 @@ public class RSA {
         // Number to be encrypted and decrypted
         int message = 12;
         int encryption;
-        BigInteger decryptMessage;
+        int result;
 
         // First prime number p, second prime number q
         // p >= 7, q < 40
@@ -32,7 +32,7 @@ public class RSA {
         System.out.println("The value of n = " + n);
         System.out.println("The value of φ(n) = " + φ);
 
-        // Choose e ∈ {2, 2, ... , φ(n)} s.t. gcd(e, φ(n)) = 1
+        // Choose e ∈ {2, 3, ... , φ(n)} s.t. gcd(e, φ(n)) = 1
         // e range starting at 2, otherwise will always stop at e = 1
         for(e = 2; e < φ; e++) {
             // e is for the public key exponent
@@ -63,27 +63,15 @@ public class RSA {
         encryption = (int) ((Math.pow(message, e)) % n);
         System.out.println("Encrypted message is: " + encryption);
 
-        // Converting int value of n to BigInteger
-        BigInteger N = BigInteger.valueOf(n);
-        System.out.println("BigInt n: " + N);
-
-        // Converting float value of c to BigInteger
-        BigInteger C = BigDecimal.valueOf(encryption).toBigInteger();
-        System.out.println("BigInt C: " + C);
-
         // Creating the decryption
-
-        int result = splitExponent(encryption, d, n);
+        result = splitExponent(encryption, d, n);
         System.out.println("Decrypted message is: " + result);
-
-        decryptMessage = (C.pow(d)).mod(N);
-        System.out.println("Decrypted message is: " + decryptMessage);
     }
 
     // recursive gcd method
-    public static int gcd(int e, int z) {
-        if(e == 0) return z;
-        else return gcd(z % e, e);
+    public static int gcd(int e, int φ) {
+        if(e == 0) return φ;
+        else return gcd(φ % e, e);
     }
 
     /* Method to perform
