@@ -1,57 +1,77 @@
 import java.math.*;
+import java.security.*;
 import java.util.*;
 
+/* RSA Algorithm
+ * 1. Choose two large primes, p & q
+ * 2. Compute n = p * q
+ * 3. Compute φ(n) = (p-1) * (q-1)
+ * 4. Choose e ∈ {2, 2, ... , φ(n)} s.t. gcd(e, φ(n)) = 1
+ * 5. Compute d = e^(-1) mod φ(n)
+ * The public key is (n, e) - e is the public expBigInteger.ONEnt
+ * The private key is (p, q, d) - d is the private expBigInteger.ONEnt
+ */
 public class BigIntegerRSA {
-
-    static final BigInteger ONE = BigInteger.valueOf(1);
-    static final BigInteger ZERO = BigInteger.valueOf(0);
     
     public static void main(String[] args) {
-        BigInteger p, q, x;
-        BigInteger d = ZERO;
-        BigInteger e = ZERO;
+        // Initializing variables
+        int bitLength = 36;
+        BigInteger p, q;
+        BigInteger d = BigInteger.ZERO;
+        BigInteger e = BigInteger.ZERO;
+        Random rand = new SecureRandom(); // Basically a random number generator
 
-        BigInteger input = BigInteger.valueOf(12);
-        BigInteger result;
+        // What the original message is
+        BigInteger message = BigInteger.valueOf(12);
         BigInteger encryption;
+        BigInteger decryption;
+        System.out.println("The message is: " + 12);
 
-        p = BigInteger.valueOf(512927377);
-        q = BigInteger.valueOf(817504253);
+        /* Creates the two primes p and q
+         * Uses SecureRandom to get a probable prime at random
+         * Apparently it's better to use SecureRandom than Random,
+         * as Random isn't a cryptographic randomness source
+         * (Whatever that means)
+        */
+        p = BigInteger.probablePrime(bitLength, rand);
+        q = BigInteger.probablePrime(bitLength, rand);
+        System.out.println("Value of q: " + q);
+        System.out.println("Value of p: " + p);
 
+        /* Creating n and φ
+         * n = p * q
+         * φ(n) = (p-1) * (q-1)
+        */
         BigInteger n = p.multiply(q);
-        BigInteger φ = (p.subtract(ONE)).multiply(q.subtract(ONE));
-
+        BigInteger φ = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
         System.out.println("The value of n = " + n);
         System.out.println("The value of φ(n) = " + φ);
 
-        for(int i = 0; i < φ.intValue(); i++) {
-            e = BigInteger.valueOf(i);
-            if(gcd(e, φ) == BigInteger.ONE) break;
-        }
-        System.out.println("The value of e = " + e);
+        /* Picking a public key exponent e
+         * Currently using e = 2^16 + 1
+         * Have exceptions for if e is too big
+         * or if e is not a prime
+         * In the case the e needs to be changed,
+         * Could do something like
+         * e = 2^(n/2) + 1 and see if the works
+         */
+        e = BigInteger.valueOf(65537);
+        if(!e.isProbablePrime(100)) throw new IllegalArgumentException("e must be prime");
+        if (e.compareTo(φ) == 1) throw new IllegalArgumentException("e too large - use a smaller value or increase the bitLength");
+        System.out.println("Value of e: " + e);
 
-        for(int i = 0; i <= 9; i++) {
-            x = ONE.add(BigInteger.valueOf(i).multiply(φ));
+        /* Finding the private key exponent d
+         * d = e^(-1) mod φ(n)
+         */
+        d = e.modInverse(φ);
+        System.out.println("Value of d = " + d);
 
-            if(x.mod(e) == ZERO) {
-                d = x.divide(e);
-                break;
-            }
-        }
-
-        System.out.println("The value of d = " + d);
-
-        
-        encryption = input.modPow(e, n);
+        // The encrypted message
+        encryption = message.modPow(e, n);
         System.out.println("Encrypted message is: " + encryption);
 
-        // BigInteger of result
-        result = (encryption.modPow(d, n));
-        System.out.println("Decrypted message is: " + result);
-    }
-
-    public static BigInteger gcd(BigInteger e, BigInteger φ) {
-        if(e == ZERO) return φ;
-        else return gcd(φ.mod(e), e);
+        // The decrypted message
+        decryption = (encryption.modPow(d, n));
+        System.out.println("Decrypted message is: " + decryption);
     }
 }

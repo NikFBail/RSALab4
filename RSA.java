@@ -1,6 +1,3 @@
-import java.math.*;
-import java.util.*;
-
 /* RSA Algorithm
  * 1. Choose two large primes, p & q
  * 2. Compute n = p * q
