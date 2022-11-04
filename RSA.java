@@ -37,8 +37,8 @@ public class RSA {
                 break;
             }
         }
+        e = 97;
         System.out.println("The value of e = " + e);
-
         // Creating d
         /* uses the proof we learned about in
          * class to show that
@@ -54,6 +54,7 @@ public class RSA {
                 break;
             }
         }
+        d = modInverse(e, φ);
         System.out.println("The value of d = " + d);
 
         // Creating the encryption
@@ -71,20 +72,30 @@ public class RSA {
         else return gcd(φ % e, e);
     }
 
+    // A naive method to find modulo
+    // multiplicative inverse of A
+    // under modulo M
+    public static int modInverse(int e, int mod) { 
+        for (int X = 1; X < mod; X++)
+            if (((e % mod) * (X % mod)) % mod == 1)
+                return X;
+        return 1;
+    }
+    
     /* Method to perform
-     * e^(-1) mod φ(n)
+     * y^d mod n
      * in a way to avoid using BigInteger
      * Takes a number, an exponent,
      * and an integer to modulo by
      * Divide exponent by 2, holding the remainder
-     * 
     */
     public static int splitExponent(int num, int pow, int mod) {
-        int halfPow = pow / 2;
         int rem = pow % 2;
         int result = 1;
-        for(int i = 0; i < halfPow; i++) {
+        for(int i = 0; i < pow; i += 2) {
+            System.out.println("Before: " + result);
             result = (result * ((int) ((Math.pow(num, 2)) % mod))) % mod;
+            System.out.println("After: " + result);
         }
         if(rem != 0) {
             result = (result * (num % mod)) % mod;

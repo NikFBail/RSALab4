@@ -33,8 +33,8 @@ public class BigIntegerRSA {
          * as Random isn't a cryptographic randomness source
          * (Whatever that means)
         */
-        p = BigInteger.probablePrime(bitLength, rand);
-        q = BigInteger.probablePrime(bitLength, rand);
+        p = BigInteger.valueOf(104395303);
+        q = BigInteger.valueOf(122949829);
         System.out.println("Value of q: " + q);
         System.out.println("Value of p: " + p);
 
