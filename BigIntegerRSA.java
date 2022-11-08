@@ -1,6 +1,4 @@
 import java.math.*;
-import java.security.*;
-import java.util.*;
 
 /* RSA Algorithm
  * 1. Choose two large primes, p & q
@@ -15,11 +13,9 @@ public class BigIntegerRSA {
     
     public static void main(String[] args) {
         // Initializing variables
-        int bitLength = 36;
         BigInteger p, q;
         BigInteger d = BigInteger.ZERO;
         BigInteger e = BigInteger.ZERO;
-        Random rand = new SecureRandom(); // Basically a random number generator
 
         // What the original message is
         BigInteger message = BigInteger.valueOf(12);
@@ -43,6 +39,8 @@ public class BigIntegerRSA {
          * φ(n) = (p-1) * (q-1)
         */
         BigInteger n = p.multiply(q);
+        // Their n value
+        n = new BigInteger("10585269523166039");
         BigInteger φ = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
         System.out.println("The value of n = " + n);
         System.out.println("The value of φ(n) = " + φ);
@@ -53,9 +51,11 @@ public class BigIntegerRSA {
          * or if e is not a prime
          * In the case the e needs to be changed,
          * Could do something like
-         * e = 2^(n/2) + 1 and see if the works
+         * e = 2^(n/2) + 1 and see if the works (65537)
          */
         e = BigInteger.valueOf(65537);
+        // Their e value
+        e = BigInteger.valueOf(7529);
         if(!e.isProbablePrime(100)) throw new IllegalArgumentException("e must be prime");
         if (e.compareTo(φ) == 1) throw new IllegalArgumentException("e too large - use a smaller value or increase the bitLength");
         System.out.println("Value of e: " + e);
@@ -68,6 +68,8 @@ public class BigIntegerRSA {
 
         // The encrypted message
         encryption = message.modPow(e, n);
+        // Their encryption
+        // encryption = new BigInteger("1643090377812209");
         System.out.println("Encrypted message is: " + encryption);
 
         // The decrypted message
