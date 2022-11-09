@@ -40,7 +40,7 @@ public class BigIntegerRSA {
         */
         BigInteger n = p.multiply(q);
         // Their n value
-        n = new BigInteger("10585269523166039");
+        // n = new BigInteger("10585269523166039");
         BigInteger φ = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
         System.out.println("The value of n = " + n);
         System.out.println("The value of φ(n) = " + φ);
@@ -55,7 +55,7 @@ public class BigIntegerRSA {
          */
         e = BigInteger.valueOf(65537);
         // Their e value
-        e = BigInteger.valueOf(7529);
+        // e = BigInteger.valueOf(7529);
         if(!e.isProbablePrime(100)) throw new IllegalArgumentException("e must be prime");
         if (e.compareTo(φ) == 1) throw new IllegalArgumentException("e too large - use a smaller value or increase the bitLength");
         System.out.println("Value of e: " + e);
